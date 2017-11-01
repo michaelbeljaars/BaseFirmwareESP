@@ -1,10 +1,18 @@
+// TOGGLE DEFINITIONS
 #define toggle_WIFI         // enables wifi functionality
 //#define toggle_WIFI_ADP   // switch for using serial wifi adapter
 #define toggle_OTA          // enables OTA (Over The Air) update functionality
-//#define toggle_MQTT         // enables MQTT communication
-//#define toggle_NTP        // enables NTP synochronization
+#define toggle_MQTT         // enables MQTT communication
+#define toggle_NTP        // enables NTP synochronization
 
 #define serialoutput true   // toggles output on serial
+
+// GENERAL INCLUDES
+#include <ArduinoJson.h>
+DynamicJsonBuffer jsonBuffer;
+JsonObject& root = jsonBuffer.createObject();
+String sPayload;
+char* cPayload;
 
 #if (serialoutput)
 int baudrate = 74880; // baudrate for serial communication; 74880 is used during boot
@@ -40,10 +48,13 @@ const char* password_OTA = "123";
 #include "module_MQTT.h"
 const char* token_MQTT = "";
 const char* server_MQTT = "192.168.100.1";
-StaticJsonBuffer<200> jsonBuffer;
 #endif
 
 #ifdef toggle_NTP
+int time_reboot = (((7 * 24) + 0) * 60 + 0) * 60; //reboot time in seconds
+int time_ntp = (((1 * 24) + 0) * 60 + 0) * 60; // ntp refresh time in seconds
+const char* ntpServerName = "time.nist.gov";
+const int timeZone = 0;     // Central European Time
 #include "module_NTP.h"
 #endif
 
@@ -92,6 +103,4 @@ void loop() {
   loop_function_NTP();
 #endif
 
-  //  printlnDebug((const char*)millis());
-  //  delay(500);
 }
