@@ -4,6 +4,7 @@
 #define toggle_OTA          // enables OTA (Over The Air) update functionality
 #define toggle_MQTT         // enables MQTT communication
 #define toggle_NTP        // enables NTP synochronization
+#define toggle_LCD
 
 #define serialoutput true   // toggles output on serial
 
@@ -13,6 +14,7 @@ DynamicJsonBuffer jsonBuffer;
 JsonObject& root = jsonBuffer.createObject();
 String sPayload;
 char* cPayload;
+#include "module_SENSORS.h"
 
 #if (serialoutput)
 int baudrate = 74880; // baudrate for serial communication; 74880 is used during boot
@@ -20,8 +22,8 @@ int baudrate = 74880; // baudrate for serial communication; 74880 is used during
 
 #ifdef toggle_WIFI
 #define toggle_TELNET // when WIFI is enabled, TELNET server is automatically created
-const char* ssid_WIFI = "Pillar"; //"DaVinciSmartDevices";
-const char* password_WIFI = "@1020!3040"; //"Wbhdvc2017!";
+const char* ssid_WIFI = "DaVinciSmartDevices";
+const char* password_WIFI = "Wbhdvc2017!";
 int WIFI_scan_time = 10000; // time to scan for wifi network with ssid ssid_WIFI
 int WIFI_connect_time = 10000; // time to try to connect to wifi network with ssid ssid_WIFI
 
@@ -40,14 +42,18 @@ const uint16_t aport = 8260;
 
 #ifdef toggle_OTA
 #include "module_OTA.h"
-const char* hostname_OTA = "NodeMCU firmware test";
+const char* hostname_OTA = "WemosD1R2 Plantenbak 1";
 const char* password_OTA = "123";
 #endif
 
 #ifdef toggle_MQTT
-#include "module_MQTT.h"
-const char* token_MQTT = "";
+const char* token_MQTT = "uqG98uePNRDpwr7TStQo";
 const char* server_MQTT = "192.168.100.1";
+#include "module_MQTT.h"
+#endif
+
+#ifdef toggle_LCD
+#include "module_LCD.h"
 #endif
 
 #ifdef toggle_NTP
@@ -57,6 +63,9 @@ const char* ntpServerName = "time.nist.gov";
 const int timeZone = 0;     // Central European Time
 #include "module_NTP.h"
 #endif
+
+int looptime = 500;
+int looptimer;
 
 void setup() {
   if (serialoutput) {
@@ -80,13 +89,21 @@ void setup() {
   setup_function_MQTT(server_MQTT);
 #endif
 
+#ifdef toggle_LCD
+  setup_function_LCD();
+#endif
+
 #ifdef toggle_NTP
   setup_function_NTP();
 #endif
 
+  setup_function_SENSORS();
+
 }
 
 void loop() {
+  looptimer = millis();
+
 #ifdef toggle_WIFI
   loop_function_WIFI(ssid_WIFI, password_WIFI);
 #endif
@@ -95,12 +112,21 @@ void loop() {
   loop_function_OTA();
 #endif
 
-#ifdef toggle_MQTT
-  loop_function_MQTT();
-#endif
-
 #ifdef toggle_NTP
   loop_function_NTP();
 #endif
 
+  loop_function_SENSORS();
+
+#ifdef toggle_MQTT
+  loop_function_MQTT();
+#endif
+
+#ifdef toggle_LCD
+  loop_function_LCD();
+#endif
+
+  while ((millis() - looptimer) < looptime) {
+    delay(100);
+  }
 }

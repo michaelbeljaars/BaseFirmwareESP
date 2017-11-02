@@ -90,7 +90,7 @@ void setup_function_WIFI(const char* ssid, const char* password_WIFI) {
 }
 
 void loop_function_WIFI(const char* ssid, const char* password_WIFI) {
-  if (WiFi.status() != WL_CONNECTED && (millis() - WIFI_scan_timer) > WIFI_scan_time) {
+  if ((WiFi.status() != WL_CONNECTED) && ((millis() - WIFI_scan_timer) > WIFI_scan_time)) {
     if (serialoutput) {
       Serial.print("Not connected to wifi for more than "); Serial.print(WIFI_scan_time / 1000); Serial.println(" seconds.");
       Serial.print("Trying to reconnect to SSID "); Serial.println(ssid_WIFI);
