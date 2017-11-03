@@ -14,7 +14,13 @@ DynamicJsonBuffer jsonBuffer;
 JsonObject& root = jsonBuffer.createObject();
 String sPayload;
 char* cPayload;
-#include "module_SENSORS.h"
+
+// SENSOR MODULES
+#include "module_SENS_LEVEL.h"
+#include "module_SENS_LIGHT.h"
+
+// ACTUATOR MODULES
+#include "module_LED.h"
 
 #if (serialoutput)
 int baudrate = 74880; // baudrate for serial communication; 74880 is used during boot
@@ -97,7 +103,12 @@ void setup() {
   setup_function_NTP();
 #endif
 
-  setup_function_SENSORS();
+  // Sensor Setup Functions
+  setup_function_SENS_LEVEL();
+  setup_function_SENS_LIGHT();
+
+  // Actuator Setup Functions
+  setup_function_LED();
 
 }
 
@@ -116,7 +127,12 @@ void loop() {
   loop_function_NTP();
 #endif
 
-  loop_function_SENSORS();
+  //Sensor Loop Functions
+  loop_function_SENS_LEVEL();
+  loop_function_SENS_LIGHT();
+
+  // Actuator Loop Functions
+  loop_function_LED();
 
 #ifdef toggle_MQTT
   loop_function_MQTT();

@@ -1,3 +1,6 @@
+#include <LiquidCrystal_I2C.h>
+#include <LCD.h>
+
 #define I2C_ADDR 0x27  // Define I2C Address for the PCF8574T
 
 //---(Following are the PCF8574 pin assignments to LCD connections )----
@@ -18,9 +21,9 @@ LiquidCrystal_I2C  lcd(I2C_ADDR, En_pin, Rw_pin, Rs_pin, D4_pin, D5_pin, D6_pin,
 
 void LCDdisplay() {
   lcd.home();
-  lcd.print("Light: "); lcd.print(value_light); lcd.print(" lx     ");
+  lcd.print("Light: "); lcd.print((int)root["Light"]); lcd.print(" lx     ");
   lcd.setCursor ( 0, 1 );        // go to the next line
-  lcd.print("Level: "); lcd.print(root["level"]); lcd.print("     ");
+  lcd.print("Level: "); lcd.print((int)root["Level"]); lcd.print("     ");
 }
 
 void setup_function_LCD(){

@@ -5,7 +5,6 @@ PubSubClient client(espClient);
 void send_data_MQTT() {
   sPayload = "";
   root.printTo(sPayload);
-  Serial.println(sPayload);
   cPayload = &sPayload[0u];
   client.publish( "v1/devices/me/telemetry", cPayload);
 }

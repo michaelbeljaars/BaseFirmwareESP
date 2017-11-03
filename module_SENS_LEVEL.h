@@ -31,15 +31,15 @@ void measure_level() {
     value_level = round(mapfloat(value_level, (1.0 / limit_level_max), (1.0 / limit_level_min), 100.0, 0.0));
   }
 
-  root["level"] = value_level;
+  root["Level"] = value_level;
 }
 
 
-void setup_function_SENSORS() {
+void setup_function_SENS_LEVEL() {
 
 }
 
-void loop_function_SENSORS() {
+void loop_function_SENS_LEVEL() {
   measure_level();
 }
 
